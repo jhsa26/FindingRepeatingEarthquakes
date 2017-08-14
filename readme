@@ -1,17 +1,65 @@
-1.complie
+#install the program
+      
 cd src 
 bash build.sh
-then you can find the program in  bin/
-2.
-cd ..
-bash run.bash
+then you can find the program in  ../bin/
+
+#data preparing ....
+
+1.we need just one component such as E or Z or N
+2.all waveforms recorded by one station should have first arrival pick.
+3.the t1 header must be marked with first arrival
+3.header:  kevnm,kzdate,kztime,mag must be write into sac
+5.all single components are put into "data_sac" folder
+6.you can filter the waveforms due to the effect of noise to the correlation results
+#script notes
+1. write_header.sh 
+   
+   it is used to replace header t1 by using a if a is marked by the first arrival 
+   and the waveforms without first arrival are delete from the data_sac folder. 
+   if you have done data preparing, you don't run this script 
+
+2.run.sh
+  
+  it is used to form the ccfile,and clusters stored in "Cluster" folder
+  each cluster in "Cluster" folder has more than "minev" events
+
+3.getcc1d.pl
+  
+  it is used  to form a correlation coefficient downtriangle matrix
+  do correlation of each pair waveform 
+  you can  change the window length and shifttime length in line 32
+     
+4.getcluster.awk
+  
+  output cluster information, although one cluster only have one piece of waveform
+        
+5.pltcluster.awk
+
+  it originally plot all clusters in one plot, one color denote one cluster.
+  now we don't use  it in "run.sh"
+
+6.plot_repeating.sh
+  
+  it is used to plot single cluster, used in run.bash. 
+  And, all plots are in Cluster not in output
+  
+  it uses obtian_shift.sh to obtain the shift of all events in one cluster relating to the first event.
+
+7.obtain_shift_time.sh
+  
+  recorrelate in one cluster to obtain the shiftimes
+ " the window length and shift length must be the same as those in getcc1d.pl"
+#
+
 
 
 ###################
 # must have arrival time  P or S , if I do
 # add a scripts to write the header
 # add the head command to select the nevent
-# 
+# add the obtain_shift.sh to obtain the shifttimes of all events in one cluster
+# add plot_repeating.sh to plot a single cluster
 
 # original explanation
 1.create the file list and index list
