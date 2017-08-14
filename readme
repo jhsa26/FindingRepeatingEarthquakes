@@ -9,7 +9,9 @@ bash run.bash
 
 ###################
 # must have arrival time  P or S , if I do
-
+# add a scripts to write the header
+# add the head command to select the nevent
+# 
 
 # original explanation
 1.create the file list and index list
