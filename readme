@@ -1,0 +1,28 @@
+1.complie
+cd src 
+bash build.sh
+then you can find the program in  bin/
+2.
+cd ..
+bash run.bash
+
+
+###################
+# must have arrival time  P or S , if I do
+
+
+# original explanation
+1.create the file list and index list
+  ls -1 *.sac >file.list
+  ls -1 *.sac|gawk '{print NR,$1}' >index.list
+2.calculate the cc matrix
+  1.edit the getcorr1d.pl to define the windows and shift
+  2../getcc1d.pl index.list >ccfile
+3.hierarchical clustering
+  always we want to use the maximum method to make event whithin
+  each cluster more similar.
+  ./cc2clusterHie  ccfile nevent 0.8 m 
+4.output the final figure
+  ./cc2clusterHie  ccfile nevent 0.8 m|paste - file.list|./getcluster.awk|./pltcluster.awk -v ps=output.ps|sh
+  to get the final figure.
+  
