@@ -14,7 +14,7 @@ END{
    for(i in cluster){
      # print i,cluster[i];
       for(j=1;j<=cluster[i];j++){
-          print "cluster",n,event[i,j];
+          printf("%s %3d %s\n","cluster",n,event[i,j]);
          }
    n++;
      }   
