@@ -6,12 +6,13 @@ then you can find the program in  ../bin/
 
 #data preparing ....
 
-1.we need just one component such as E or Z or N
+1.we need just one component such as E or Z or N; all sample rates are the same
 2.all waveforms recorded by one station should have first arrival pick.
 3.the t1 header must be marked with first arrival
 3.header:  kevnm,kzdate,kztime,mag must be write into sac
 5.all single components are put into "data_sac" folder
 6.you can filter the waveforms due to the effect of noise to the correlation results
+
 #script notes
 1. write_header.sh 
    
@@ -50,9 +51,13 @@ then you can find the program in  ../bin/
   
   recorrelate in one cluster to obtain the shiftimes
  " the window length and shift length must be the same as those in getcc1d.pl"
-#
+# !!!! 
+  if we use large shift time that makes the "t1-shifttime < b", the "corr1d" soft would show "the dt value seems too large for file", and then stop.
+  so the ccfile would be out of order. so you would get wrong cluster result
+  
+  if the large shift time used, I change the output from corr1d using the same format that outputed with the proper shift time. but the cc value and shiftime are 0 and 999, respectively.
 
-
+  
 
 ###################
 # must have arrival time  P or S , if I do
