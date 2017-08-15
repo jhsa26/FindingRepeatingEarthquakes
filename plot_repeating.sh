@@ -12,7 +12,7 @@ cut2=15
 outmap=${filename}".ps"
 sacfile=`awk '{printf("%s  ",$3)}' $filename`
 nev=`cat $filename | wc -l | awk '{print $1+1}'`
-echo $sacfile
+:<<block
 ./obtain_shift_time.sh ${filename} | paste - ${filename} | awk   '{
 shifttime = $4
 print "echo on processed"     >"shift.sacm"
@@ -21,7 +21,7 @@ print "ch user9 ",  3*shifttime >>"shift.sacm"
 print "wh;w over;q;"          >>"shift.sacm"
 print "sac shift.sacm"
 }'  | sh
-
+block
 R=${btime}/${atime}/0/${nev}
 size=`echo ${nev} |awk '{print 10/$1}'`
 psbasemap -J${J} -R${R} -Ba1:"T(s)":/a1wSen -P -K >${outmap}
@@ -48,5 +48,7 @@ echo "$atime 1.4 11 0 0 LM Event    Date        Time        Magnitude "  | pstex
 #echo "$atime 1.2 10 0 0 LM event "  | pstext -J -R -D0.2/0 -N  -P -O  >>${outmap}
 #echo "$atime 1.2 10 0 0 LM event "  | pstext -J -R -D0.2/0 -N  -P -O  >>${outmap}
 #echo "$atime 1.2 10 0 0 LM event "  | pstext -J -R -D0.2/0 -N  -P -O  >>${outmap}
-gs ${outmap}
+ps2raster -A -Tte  -E300 ${outmap}
+rm -rf ${outmap}
+#gs ${outmap} &
 

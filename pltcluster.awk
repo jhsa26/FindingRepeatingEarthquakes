@@ -28,7 +28,6 @@ BEGIN{
    n++;
  }
 END{
-    print n
     print "psbasemap -JX5i/10i -R"btime"/"atime"/0/"n" -Ba1/a10WSen -P -K >"ps
 #find the optimal size.We will shift Y later,so make this as accurate as possible.
     size=sprintf("%.6f",10/n);
@@ -55,10 +54,11 @@ END{
        for(ii in cluster){
           for(jj=1;jj<=cluster[ii];jj++){
           ncount++;
-          print atime,ncount,10,0,0,"LM",substr(f[ii,jj],8,12); 
+          print atime,ncount,10,0,0,"LM",substr(f[ii,jj],12,12); 
           }
      }
     print "EOF"
+    print "ps2raster -A -Tj -E300 " ps
 #end of the gmt scripts
     print "gs "ps" &"
 }

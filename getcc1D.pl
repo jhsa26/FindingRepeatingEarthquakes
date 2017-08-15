@@ -28,8 +28,8 @@ for($i=0;$i<@filenm;$i++){
        my $out;
 #print "$filenm[$i]\t$filenm[$j]\n";
        #my $out=`./bin/corr1d 1 $filenm[$i] $filenm[$j] 5 2`;
-       # for gofar data
-       my $out=`./bin/corr1d 1 $filenm[$i] $filenm[$j] 10 5`;
+       # for gofar data                 window length(s) shifttime (s)
+       my $out=`./bin/corr1d 1 $filenm[$i] $filenm[$j] 8 3`;
        my @outcc=split(/\t/,$out,4);
        print "$outcc[1]\t";
  }
