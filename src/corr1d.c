@@ -99,7 +99,8 @@ int main(int argc,char*argv[])
 //test
 // printf("timeflag in file1 is %.6f\ttimeflag in file2 is%.6f\n",flagtime1,flagtime2);
    if(fabs(flagtime2-hd2.b)<dt||fabs(hd2.e-length-flagtime2)<dt){
-      printf("the dt value seems too large for file:%s %10.5f\n",argv[3],flagtime1);
+      //printf("the dt value seems too large for file:%s %10.5f\n",argv[3],flagtime1);
+      printf("coeff1d\t%f\tshifttime\t%f\n",0.0,-999.0);
       exit(-1);
     }
     npts1=hd1.npts;

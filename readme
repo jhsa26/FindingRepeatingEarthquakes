@@ -9,27 +9,29 @@ then you can find the program in  ../bin/
 1.we need just one component such as E or Z or N; all sample rates are the same
 2.all waveforms recorded by one station should have first arrival pick.
 3.the t1 header must be marked with first arrival
-3.header:  kevnm,kzdate,kztime,mag must be write into sac
+3.header:  kevnm,kzdate,kztime,mag must be write into sac header
 5.all single components are put into "data_sac" folder
 6.you can filter the waveforms due to the effect of noise to the correlation results
 
 #script notes
 1. write_header.sh 
    
-   it is used to replace header t1 by using a if a is marked by the first arrival 
-   and the waveforms without first arrival are delete from the data_sac folder. 
-   if you have done data preparing, you don't run this script 
+   it is used to replace header t1 with header a if a is marked by the first arrival 
+   and the waveforms without first pick are delete from the data_sac folder. 
+   if you have done, you don't run this script 
+   in this script, we can add filter option 
 
 2.run.sh
   
   it is used to form the ccfile,and clusters stored in "Cluster" folder
   each cluster in "Cluster" folder has more than "minev" events
+  parameter "minev" is in the run.sh
 
 3.getcc1d.pl
   
-  it is used  to form a correlation coefficient downtriangle matrix
+  it is used  to form a lower triangle matrix of cc
   do correlation of each pair waveform 
-  you can  change the window length and shifttime length in line 32
+  you can  "change the window length and shifttime length in line 32"
      
 4.getcluster.awk
   
@@ -37,47 +39,38 @@ then you can find the program in  ../bin/
         
 5.pltcluster.awk
 
-  it originally plot all clusters in one plot, one color denote one cluster.
+  it was used to plot all clusters in one plot, one color denotes one cluster.
   now we don't use  it in "run.sh"
 
 6.plot_repeating.sh
   
   it is used to plot single cluster, used in run.bash. 
-  And, all plots are in Cluster not in output
+  And, all plots are in "Cluster" not in "output"
   
-  it uses obtian_shift.sh to obtain the shift of all events in one cluster relating to the first event.
+  it uses obtian_shift.sh to obtain the time shift of all events in one cluster relating to the first event.
+
+  all plots align in order of the origin time
 
 7.obtain_shift_time.sh
   
   recorrelate in one cluster to obtain the shiftimes
  " the window length and shift length must be the same as those in getcc1d.pl"
-# !!!! 
-  if we use large shift time that makes the "t1-shifttime < b", the "corr1d" soft would show "the dt value seems too large for file", and then stop.
+
+8. check_ccfile.sh
+  
+  this script is used to check the "./output/ccfile"
+
+  if the number elements in one line is not equal with the line number, so the ccfile is wrong due to the following bug.
+
+  I correct the 'corr1d' output, so the check_ccfile.sh is not used in there. 
+  
+  if you use the origin the softpackage from seismic training of BSW, you can use this file to check the ccfile, and according to the message out-printed, change the shifttime or delete the sacfile.
+
+# bug in the original soft package from BSW
+  if we use large shift time that make the t1-shifttime < b, the corr1d soft would show "the dt value seems too large for file", and then stop.
   so the ccfile would be out of order. so you would get wrong cluster result
   
   if the large shift time used, I change the output from corr1d using the same format that outputed with the proper shift time. but the cc value and shiftime are 0 and 999, respectively.
-
   
+  and modify the "cc2clusterHierarchical.c" , let the diagnal elements be 0
 
-###################
-# must have arrival time  P or S , if I do
-# add a scripts to write the header
-# add the head command to select the nevent
-# add the obtain_shift.sh to obtain the shifttimes of all events in one cluster
-# add plot_repeating.sh to plot a single cluster
-
-# original explanation
-1.create the file list and index list
-  ls -1 *.sac >file.list
-  ls -1 *.sac|gawk '{print NR,$1}' >index.list
-2.calculate the cc matrix
-  1.edit the getcorr1d.pl to define the windows and shift
-  2../getcc1d.pl index.list >ccfile
-3.hierarchical clustering
-  always we want to use the maximum method to make event whithin
-  each cluster more similar.
-  ./cc2clusterHie  ccfile nevent 0.8 m 
-4.output the final figure
-  ./cc2clusterHie  ccfile nevent 0.8 m|paste - file.list|./getcluster.awk|./pltcluster.awk -v ps=output.ps|sh
-  to get the final figure.
-  
